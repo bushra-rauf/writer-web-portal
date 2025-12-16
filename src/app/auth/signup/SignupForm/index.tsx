@@ -6,8 +6,11 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import Link from "next/link"
+import { useLanguage } from '@/contexts/LanguageContext'
+import { t } from '@/utils/translations'
 
 const SignupForm = () => {
+  const { language } = useLanguage()
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(signupSchema)
   })
@@ -15,28 +18,28 @@ const SignupForm = () => {
   const onSubmit = async (data: any) => {
     try {
       await signupAction(data)
-      toast.success('Account created successfully!')
+      toast.success(t('auth.accountCreated', language))
       // Redirect is handled by the server action
     } catch (error: any) {
-      toast.error(error.message || 'Failed to create account')
+      toast.error(error.message || t('auth.accountCreationFailed', language))
     }
   }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col space-y-4">
       <h2 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-800">
-        Create your account
+        {t('auth.signupTitle', language)}
       </h2>
 
       <fieldset>
         <label className="block font-semibold text-sm mb-2" htmlFor="fullName">
-          Full Name
+          {t('auth.fullName', language)}
         </label>
         <input
           {...register('fullName')}
           id="fullName"
           type="text"
-          placeholder="John Doe"
+          placeholder={t('auth.fullNamePlaceholder', language)}
           className="input-field"
         />
         {errors.fullName && (
@@ -46,13 +49,13 @@ const SignupForm = () => {
 
       <fieldset>
         <label className="block font-semibold text-sm mb-2" htmlFor="email">
-          Email
+          {t('auth.email', language)}
         </label>
         <input
           {...register('email')}
           id="email"
           type="email"
-          placeholder="you@example.com"
+          placeholder={t('auth.emailPlaceholder', language)}
           className="input-field"
         />
         {errors.email && (
@@ -61,7 +64,7 @@ const SignupForm = () => {
       </fieldset>
 
       <fieldset>
-        <label className="block font-semibold text-sm mb-2">I am a</label>
+        <label className="block font-semibold text-sm mb-2">{t('auth.iAmA', language)}</label>
         <div className="flex gap-4">
           <label className="flex items-center">
             <input
@@ -70,7 +73,7 @@ const SignupForm = () => {
               value="reader"
               className="mr-2"
             />
-            Reader
+            {t('auth.reader', language)}
           </label>
           <label className="flex items-center">
             <input
@@ -79,7 +82,7 @@ const SignupForm = () => {
               value="writer"
               className="mr-2"
             />
-            Writer
+            {t('auth.writer', language)}
           </label>
         </div>
         {errors.userType && (
@@ -89,13 +92,13 @@ const SignupForm = () => {
 
       <fieldset>
         <label className="block font-semibold text-sm mb-2" htmlFor="password">
-          Password
+          {t('auth.password', language)}
         </label>
         <input
           {...register('password')}
           id="password"
           type="password"
-          placeholder="••••••••"
+          placeholder={t('auth.passwordPlaceholder', language)}
           className="input-field"
         />
         {errors.password && (
@@ -105,13 +108,13 @@ const SignupForm = () => {
 
       <fieldset>
         <label className="block font-semibold text-sm mb-2" htmlFor="confirmPassword">
-          Confirm Password
+          {t('auth.confirmPassword', language)}
         </label>
         <input
           {...register('confirmPassword')}
           id="confirmPassword"
           type="password"
-          placeholder="••••••••"
+          placeholder={t('auth.passwordPlaceholder', language)}
           className="input-field"
         />
         {errors.confirmPassword && (
@@ -123,13 +126,13 @@ const SignupForm = () => {
         type="submit"
         className="btn-primary w-full py-3 font-bold text-lg"
       >
-        Sign Up
+        {t('auth.signupButton', language)}
       </button>
 
       <p className="text-sm text-center text-gray-600">
-        Already have an account?{' '}
+        {t('auth.alreadyHaveAccount', language)}{' '}
         <Link href="/auth/login" className="text-primary hover:underline font-semibold">
-          Login here
+          {t('auth.loginHere', language)}
         </Link>
       </p>
     </form>

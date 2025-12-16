@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr"
 import { NextRequest, NextResponse } from "next/server"
 
-export const middleware = async (request: NextRequest) => {
+export const proxy = async (request: NextRequest) => {
   let supabaseResponse = NextResponse.next({ request })
 
   const supabase = createServerClient(
