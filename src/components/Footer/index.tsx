@@ -2,8 +2,12 @@
 
 import Link from 'next/link';
 import { TwitterLogo, FacebookLogo, LinkedinLogo } from '@phosphor-icons/react';
-import Image from "next/image" 
+import Image from "next/image";
+import { useLanguage } from '@/contexts/LanguageContext';
+import { t } from '@/utils/translations';
+
 export default function Footer() {
+  const { language } = useLanguage();
   const currentYear = new Date().getFullYear();
 
   return (
@@ -18,28 +22,57 @@ export default function Footer() {
             <h1 className="ml-0 font-bold text-2xl text-white md:text-center hover:bg-linear-to-r from-pink-400 via-yellow-300 to-green-400 bg-clip-text">
               Writer<span className="text-amber-600 ">Hub</span>
             </h1>
-        </div>
+          </div>
+
           {/* Quick Links */}
           <nav aria-label="Quick Links" className="md:justify-self-center">
-            <h4 className="text-white font-bold mb-4 md:text-center">Quick Links</h4>
+            <h4 className="text-white font-bold mb-4 md:text-center">
+              {t('home.footer.quickLinks.title', language)}
+            </h4>
             <ul className="space-y-2 text-sm md:text-left">
-              <li><Link href="/books" className="hover:text-white transition">Browse Books</Link></li>
-              <li><Link href="/dashboard" className="hover:text-white transition">Dashboard</Link></li>
-              <li><Link href="/" className="hover:text-white transition">Home</Link></li>
+              <li>
+                <Link href="/books" className="hover:text-white transition">
+                  {t('home.footer.quickLinks.browseBooks', language)}
+                </Link>
+              </li>
+              <li>
+                <Link href="/dashboard" className="hover:text-white transition">
+                  {t('home.footer.quickLinks.dashboard', language)}
+                </Link>
+              </li>
+              <li>
+                <Link href="/" className="hover:text-white transition">
+                  {t('home.footer.quickLinks.home', language)}
+                </Link>
+              </li>
             </ul>
           </nav>
 
           {/* Social */}
           <div className="md:justify-self-end">
-            <h4 className="text-white font-bold mb-4 md:text-center">Connect</h4>
-            <div className="flex space-x-6 md:justify-end">
-              <Link href="https://x.com/FuturegamesEDU/status/1041957370388209665" aria-label="Twitter" className="hover:text-white transition">
+            <h4 className="text-white font-bold mb-4 md:text-right">
+              {t('home.footer.social.connect', language)}
+            </h4>
+            <div className="flex gap-6 md:justify-end">
+              <Link
+                href="https://x.com/FuturegamesEDU/status/1041957370388209665"
+                aria-label={t('home.footer.social.twitter', language)}
+                className="hover:text-white transition"
+              >
                 <TwitterLogo size={20} />
               </Link>
-              <Link href="https://www.facebook.com/FuturegamesEDU" aria-label="Facebook" className="hover:text-white transition">
+              <Link
+                href="https://www.facebook.com/FuturegamesEDU"
+                aria-label={t('home.footer.social.facebook', language)}
+                className="hover:text-white transition"
+              >
                 <FacebookLogo size={20} />
               </Link>
-              <Link href="https://www.linkedin.com/school/futuregames/posts/?feedView=all" aria-label="LinkedIn" className="hover:text-white transition">
+              <Link
+                href="https://www.linkedin.com/school/futuregames/posts/?feedView=all"
+                aria-label={t('home.footer.social.linkedin', language)}
+                className="hover:text-white transition"
+              >
                 <LinkedinLogo size={20} />
               </Link>
             </div>
@@ -49,10 +82,10 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-gray-700 pt-6 flex flex-col sm:flex-row justify-between items-center">
           <p className="text-sm text-center sm:text-left">
-            &copy; {currentYear} WriterHub. All rights reserved.
+            &copy; {currentYear} {t('home.footer.copyright', language)}
           </p>
           <p className="text-sm mt-4 sm:mt-0 hover:text-white transition">
-            Built with using Next.js & Supabase
+            {t('home.footer.builtWith', language)}
           </p>
         </div>
       </div>
