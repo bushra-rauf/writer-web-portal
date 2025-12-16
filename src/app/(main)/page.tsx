@@ -6,9 +6,12 @@ import { getFeaturedBooks } from '@/utils/supabase/queries';
 import BookCard from '@/components/BookCard';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { t } from '@/utils/translations';
+import { createClient } from '@/utils/supabase/browser-client';
 
 export default function Home() {
   const { language } = useLanguage();
+  const supabase = createClient();
+
   const { data: booksData, isLoading: loading } = useQuery({
     queryKey: ['featured-books'],
     queryFn: getFeaturedBooks,
@@ -16,7 +19,48 @@ export default function Home() {
     staleTime: 60000, // 1 minute
   });
 
+  const { data: user } = useQuery({
+    queryKey: ['current-user'],
+    queryFn: async () => {
+      const { data: { user }, error } = await supabase.auth.getUser();
+      if (error) throw error;
+      return user;
+    },
+    staleTime: Infinity,
+    retry: false
+  });
+
+  // Check if user exists in writers table (for users who signed up before metadata fix)
+  const { data: writerData } = useQuery({
+    queryKey: ['writer-check', user?.id],
+    queryFn: async () => {
+      if (!user?.id) return null;
+      const { data, error } = await supabase
+        .from('writers')
+        .select('id')
+        .eq('id', user.id)
+        .single();
+      if (error) return null;
+      return data;
+    },
+    enabled: !!user?.id,
+    staleTime: Infinity,
+    retry: false
+  });
+
   const featuredBooks = booksData?.data || [];
+
+  // Check if user is a logged-in writer (check both metadata and database)
+  const isWriter = user?.user_metadata?.userType === 'writer' || !!writerData;
+  const publishingButtonHref = isWriter ? '/dashboard' : '/auth/signup';
+
+  // Debug logging (remove after testing)
+  if (user) {
+    console.log('User metadata:', user.user_metadata);
+    console.log('Writer data:', writerData);
+    console.log('Is writer:', isWriter);
+    console.log('Publishing button href:', publishingButtonHref);
+  }
 
   return (
     <div className="min-h-screen">
@@ -33,8 +77,8 @@ export default function Home() {
             <Link href="/books" className="btn-accent px-8 py-3 text-lg font-semibold rounded-lg hover:scale-105 transition-transform">
               {t('home.hero.browseBooks', language)}
             </Link>
-            <Link href="/auth/signup" className="btn border-2 border-white text-white px-8 py-3 text-lg font-semibold rounded-lg hover:bg-white hover:text-primary transition-all">
-              {t('home.hero.startWriting', language)}
+            <Link href={publishingButtonHref} className="btn border-2 border-white text-white px-8 py-3 text-lg font-semibold rounded-lg hover:bg-white hover:text-primary transition-all">
+              {t('home.hero.startPublishing', language)}
             </Link>
           </div>
         </div>
@@ -131,7 +175,7 @@ export default function Home() {
           <p className="text-xl mb-8 text-gray-100">
             {t('home.readyToShare.subtitle', language)}
           </p>
-          <Link href="/auth/signup" className="btn-accent px-8 py-3 text-lg font-semibold rounded-lg inline-block hover:scale-105 transition-transform">
+          <Link href={publishingButtonHref} className="btn-accent px-8 py-3 text-lg font-semibold rounded-lg inline-block hover:scale-105 transition-transform">
             {t('home.readyToShare.button', language)}
           </Link>
         </div>

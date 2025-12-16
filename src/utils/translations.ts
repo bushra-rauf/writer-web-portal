@@ -191,6 +191,7 @@ export const translations: NestedTranslations = {
       title: { english: 'Discover & Publish Amazing Books', urdu: 'حیرت انگیز کتابیں دریافت اور شائع کریں' },
       subtitle: { english: 'A platform for writers to share their stories and readers to explore new worlds', urdu: 'مصنفین کے لیے اپنی کہانیاں شیئر کرنے اور قارئین کے لیے نئی دنیائیں تلاش کرنے کا پلیٹ فارم' },
       browseBooks: { english: 'Browse Books', urdu: 'کتابیں تلاش کریں' },
+      startPublishing: { english: 'Start Publishing', urdu: 'شائع کرنا شروع کریں' },
       startWriting: { english: 'Start Writing', urdu: 'لکھنا شروع کریں' },
       getStarted: { english: 'Get Started', urdu: 'شروع کریں' },
       learnMore: { english: 'Learn More', urdu: 'مزید جانیں' },

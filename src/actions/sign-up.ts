@@ -8,7 +8,16 @@ import z from 'zod'
 export const signupAction = async (userdata: z.infer<typeof signupSchema>) => {
   const supabase = await createClient()
 
-  const { data: { user }, error } = await supabase.auth.signUp(userdata)
+  const { data: { user }, error } = await supabase.auth.signUp({
+    email: userdata.email,
+    password: userdata.password,
+    options: {
+      data: {
+        fullName: userdata.fullName,
+        userType: userdata.userType,
+      }
+    }
+  })
     
     if (user && user.email && userdata.userType === 'writer') {
     await supabase.from('writers').insert([{

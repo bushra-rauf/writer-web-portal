@@ -27,6 +27,9 @@ const MobileMenu = () => {
         retry: false
     })
 
+    // Get user's full name from metadata
+    const userName = user?.user_metadata?.fullName || user?.email?.split('@')[0] || 'User'
+
     const handleSignOut = async () => {
         try {
             await LogOut()
@@ -53,6 +56,14 @@ const MobileMenu = () => {
             {isOpen && (
                 <div className="absolute top-16 left-0 right-0 bg-primary shadow-lg pb-4 px-4">
                     <div className="space-y-2">
+                        {/* User Name Display - Mobile */}
+                        {user && (
+                            <div className="py-2 px-2 border-b border-white border-opacity-20">
+                                <span className="text-white font-semibold text-sm">
+                                    {userName}
+                                </span>
+                            </div>
+                        )}
                         <Link
                             href="/"
                             className="block hover:text-gray-200 transition py-2"

@@ -24,6 +24,9 @@ const AccountLinks = () => {
         retry: false
     })
 
+    // Get user's full name from metadata
+    const userName = user?.user_metadata?.fullName || user?.email?.split('@')[0] || 'User'
+
     return (
        <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
         {/* Navigation Links */}
@@ -32,6 +35,15 @@ const AccountLinks = () => {
         {/* Auth Buttons */}
         {user ?
         <>
+            {/* User Name Display - More Prominent */}
+            <div className="flex items-center gap-2 bg-white bg-opacity-10 px-3 py-1.5 rounded-lg">
+                <span className="text-accent font-semibold text-xs sm:text-sm whitespace-nowrap">
+                    {language === 'english' ? 'Logged in:' : 'لاگ ان:'}
+                </span>
+                <span className="text-white font-bold text-xs sm:text-sm whitespace-nowrap">
+                    {userName}
+                </span>
+            </div>
             <LogOutButton/>
         </>
         :
