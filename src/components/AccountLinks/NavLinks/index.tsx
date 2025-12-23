@@ -21,6 +21,27 @@ const NavLinks = () => {
         retry: false
     })
 
+    // Check if user exists in writers table
+    const { data: writerData } = useQuery({
+        queryKey: ['writer-check', user?.id],
+        queryFn: async () => {
+            if (!user?.id) return null
+            const { data, error } = await supabase
+                .from('writers')
+                .select('id')
+                .eq('id', user.id)
+                .single()
+            if (error) return null
+            return data
+        },
+        enabled: !!user?.id,
+        staleTime: Infinity,
+        retry: false
+    })
+
+    // Check if user is a writer (check both metadata and database)
+    const isWriter = user?.user_metadata?.userType === 'writer' || !!writerData
+
     return (
         <div className="hidden md:flex items-center gap-4 text-white">
             <Link href="/" className="hover:text-gray-200 transition">
@@ -29,7 +50,7 @@ const NavLinks = () => {
             <Link href="/books" className="hover:text-gray-200 transition">
                 {t('nav.books', language)}
             </Link>
-            {user && (
+            {isWriter && (
                 <Link href="/dashboard" className="hover:text-gray-200 transition">
                     {t('nav.dashboard', language)}
                 </Link>

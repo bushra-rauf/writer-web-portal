@@ -1,17 +1,15 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { t } from '@/utils/translations'
-import { LogOut } from '@/actions/logout'
 import { useQuery } from '@tanstack/react-query'
 import { createClient } from '@/utils/supabase/browser-client'
 
 const MobileMenu = () => {
     const [isOpen, setIsOpen] = useState(false)
-    const [isPending, startTransition] = useTransition()
     const router = useRouter()
     const { language, changeLanguage } = useLanguage()
     const supabase = createClient()
@@ -27,16 +25,34 @@ const MobileMenu = () => {
         retry: false
     })
 
+    // Check if user exists in writers table
+    const { data: writerData } = useQuery({
+        queryKey: ['writer-check', user?.id],
+        queryFn: async () => {
+            if (!user?.id) return null
+            const { data, error } = await supabase
+                .from('writers')
+                .select('id')
+                .eq('id', user.id)
+                .single()
+            if (error) return null
+            return data
+        },
+        enabled: !!user?.id,
+        staleTime: Infinity,
+        retry: false
+    })
+
+    // Check if user is a writer (check both metadata and database)
+    const isWriter = user?.user_metadata?.userType === 'writer' || !!writerData
+
     // Get user's full name from metadata
     const userName = user?.user_metadata?.fullName || user?.email?.split('@')[0] || 'User'
 
     const handleSignOut = async () => {
-        try {
-            await LogOut()
-        } finally {
-            setIsOpen(false)
-            if (typeof window !== 'undefined') window.location.reload()
-        }
+        setIsOpen(false)
+        await supabase.auth.signOut()
+        window.location.href = '/'
     }
 
     return (
@@ -81,19 +97,20 @@ const MobileMenu = () => {
 
                         {user ? (
                             <>
-                                <Link
-                                    href="/dashboard"
-                                    className="block hover:text-gray-200 transition py-2"
-                                    onClick={() => setIsOpen(false)}
-                                >
-                                    {t('nav.dashboard', language)}
-                                </Link>
+                                {isWriter && (
+                                    <Link
+                                        href="/dashboard"
+                                        className="block hover:text-gray-200 transition py-2"
+                                        onClick={() => setIsOpen(false)}
+                                    >
+                                        {t('nav.dashboard', language)}
+                                    </Link>
+                                )}
                                 <button
                                     onClick={handleSignOut}
-                                    disabled={isPending}
-                                    className="w-full text-left bg-accent px-4 py-2 rounded-lg hover:bg-opacity-90 transition disabled:opacity-50"
+                                    className="w-full text-left bg-accent px-4 py-2 rounded-lg hover:bg-opacity-90 transition"
                                 >
-                                    {isPending ? t('nav.loggingOut', language) || 'Logging out...' : t('nav.logout', language)}
+                                    {t('nav.logout', language)}
                                 </button>
                             </>
                         ) : (

@@ -7,10 +7,10 @@ export const LogOut = async () => {
     const supabase = await createClient()
     const { error } = await supabase.auth.signOut()
 
-    // Return a structured result to the client so it can handle navigation
     if (error) {
-        return { ok: false, error }
+        throw error
     }
 
-    return { ok: true }
+    // Redirect to home page after successful logout
+    redirect('/')
 }

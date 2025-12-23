@@ -6,7 +6,6 @@ import ErrorMessage from "@/components/ErrorMessage"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
-import { toast } from "sonner"
 import { useLanguage } from '@/contexts/LanguageContext'
 import { t } from '@/utils/translations'
 
@@ -18,15 +17,12 @@ const LoginForm = () => {
 
   const { mutate, isPending, data, error } = useMutation({
     mutationFn: loginAction,
-    onSuccess: () => {
-      toast.success(t('auth.loginSuccess', language))
-    },
-    onError: (err: any) => {
-      toast.error(err?.message || t('auth.loginError', language))
-    }
+      
   })
-
-  return (
+  if(!language) return null
+  console.log(typeof language)
+  return ( 
+  <>
     <form onSubmit={handleSubmit((values) => mutate(values))} className="flex flex-col space-y-4">
       <h2 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-800">
         {t('auth.loginTitle', language)}
@@ -41,7 +37,7 @@ const LoginForm = () => {
           id="email"
           type="email"
           placeholder={t('auth.emailPlaceholder', language)}
-          name="email"
+          
           autoComplete="username"
           className="input-field"
           disabled={isPending}
@@ -60,7 +56,7 @@ const LoginForm = () => {
           id="password"
           type="password"
           placeholder={t('auth.passwordPlaceholder', language)}
-          name="password"
+          
           autoComplete="current-password"
           className="input-field"
           disabled={isPending}
@@ -79,9 +75,10 @@ const LoginForm = () => {
       </button>
 
       {data?.error &&
-        <ErrorMessage message ={data?.error}/>
+        <ErrorMessage message={data?.error}/>
       }
     </form>
+    </>
   )
 }
 

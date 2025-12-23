@@ -1,17 +1,16 @@
-import { describe, it, expect, vi, afterEach } from 'vitest'
-
-vi.mock('@/utils/supabase/server-client', () => ({
-  createClient: vi.fn()
-}))
-
-vi.mock('next/navigation', async () => ({
-  ...(await vi.importActual('next/navigation')),
-  redirect: vi.fn()
-}))
-
+import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest'
 import { createClient } from '@/utils/supabase/server-client'
 import { loginAction } from '../log-in'
 import { redirect } from 'next/navigation'
+
+vi.mock('@/utils/supabase/server-client')
+vi.mock('next/navigation', async (importOriginal) => {
+  const actual = await importOriginal()
+  return {
+    ...actual,
+    redirect: vi.fn()
+  }
+})
 
 describe('loginAction server action', () => {
   afterEach(() => {
