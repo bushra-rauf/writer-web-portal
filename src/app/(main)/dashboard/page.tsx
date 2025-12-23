@@ -124,28 +124,30 @@ export default function DashboardPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {userBooks.map((book: any) => (
-              <div key={book.id} className="card">
+              <div key={book.id} className="card h-full flex flex-col">
                 {/* Cover Image */}
-                <div className="w-full h-48 bg-gradient-to-br from-primary to-secondary rounded-lg mb-4 flex items-center justify-center text-white text-4xl overflow-hidden">
+                <div className="w-full h-56 bg-gradient-to-br from-primary to-secondary rounded-lg mb-4 flex items-center justify-center text-white text-4xl overflow-hidden">
                   {book.cover_image ? (
-                    <img src={book.cover_image} alt={book.title} className="w-full h-full object-cover" />
+                    <img src={book.cover_image} alt={book.title} className="w-full h-full object-contain bg-white" />
                   ) : (
                     <span>📖</span>
                   )}
                 </div>
 
                 {/* Book Details */}
-                <h3 className={`font-bold text-lg mb-2 ${book.language === 'urdu' ? 'text-right' : 'text-left'}`}>
-                  {book.title}
-                </h3>
-                <p className="text-sm text-gray-600 mb-2">
-                  {book.category} • {book.language === 'urdu' ? 'اردو' : 'English'}
-                </p>
-                <p className={`text-gray-700 text-sm mb-4 line-clamp-2 ${book.language === 'urdu' ? 'text-right' : 'text-left'}`}>
-                  {book.description}
-                </p>
+                <div className="flex-grow">
+                  <h3 className={`font-bold text-lg mb-2 ${book.language === 'urdu' ? 'text-right' : 'text-left'}`}>
+                    {book.title}
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-2">
+                    {book.category} • {book.language === 'urdu' ? 'اردو' : 'English'}
+                  </p>
+                  <p className={`text-gray-700 text-sm line-clamp-2 min-h-[40px] ${book.language === 'urdu' ? 'text-right' : 'text-left'}`}>
+                    {book.description}
+                  </p>
+                </div>
 
-                <div className="flex gap-3">
+                <div className="flex gap-3 mt-4">
                   <Link
                     href={`/books/${book.slug}`}
                     className="btn-outline flex-1 text-center text-sm py-2"

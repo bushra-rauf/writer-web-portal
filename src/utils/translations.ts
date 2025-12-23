@@ -257,7 +257,7 @@ export const translations: NestedTranslations = {
     // CTA Section
     readyToShare: {
       title: { english: 'Ready to Share Your Story?', urdu: 'اپنی کہانی شیئر کرنے کے لیے تیار ہیں؟' },
-      subtitle: { english: 'Join thousands of writers who are publishing and selling their books on WriterHub.', urdu: 'ہزاروں مصنفین میں شامل ہوں جو رائٹر ہب پر اپنی کتابیں شائع اور فروخت کر رہے ہیں۔' },
+      subtitle: { english: 'Join writers who are publishing and selling their books on WriterHub.', urdu: 'مصنفین میں شامل ہوں جو رائٹر ہب پر اپنی کتابیں شائع اور فروخت کر رہے ہیں۔' },
       button: { english: 'Get Started Today', urdu: 'آج ہی شروع کریں' },
     },
 

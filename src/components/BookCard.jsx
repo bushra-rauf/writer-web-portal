@@ -15,9 +15,9 @@ export default function BookCard({ book }) {
       dir={isUrdu ? 'rtl' : 'ltr'}
     >
       {/* Book Cover */}
-      <div className="w-full h-auto bg-gradient-to-br from-primary to-secondary rounded-lg mb-4 flex items-center justify-center text-white text-4xl overflow-hidden">
+      <div className="w-full h-56 bg-gradient-to-br from-primary to-secondary rounded-lg mb-4 flex items-center justify-center text-white text-4xl overflow-hidden">
         {book.cover_image ? (
-          <img src={book.cover_image} alt={book.title} className="w-full h-full object-cover" />
+          <img src={book.cover_image} alt={book.title} className="w-full h-full object-contain bg-white" />
         ) : (
           <span>📖</span>
         )}
@@ -55,7 +55,7 @@ export default function BookCard({ book }) {
         </div>
 
         {/* Preview Text */}
-        <p className="text-gray-600 text-sm line-clamp-3 mb-4" style={{ textAlign: isUrdu ? 'right' : 'left' }}>
+        <p className="text-gray-600 text-sm line-clamp-3 min-h-[60px]" style={{ textAlign: isUrdu ? 'right' : 'left' }}>
           {book.description}
         </p>
       </div>
